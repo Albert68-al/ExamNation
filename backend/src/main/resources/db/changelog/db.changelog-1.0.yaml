@@ -1,0 +1,645 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: admin
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: VARCHAR(15)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_role_user
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: roles
+                    referencedColumnNames: id
+                    foreignKeyName: fk_user_role_role
+            constraints:
+              primaryKey:
+                columnNames: user_id, role_id
+
+  - changeSet:
+      id: 4
+      author: admin
+      changes:
+        - createTable:
+            tableName: student
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: fk_student_user
+              - column:
+                  name: school
+                  type: VARCHAR(100)
+              - column:
+                  name: level
+                  type: VARCHAR(20)
+              - column:
+                  name: birth_date
+                  type: DATE
+              - column:
+                  name: city
+                  type: VARCHAR(50)
+
+  - changeSet:
+      id: 5
+      author: admin
+      changes:
+        - createTable:
+            tableName: admins
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: fk_admin_user
+              - column:
+                  name: department
+                  type: VARCHAR(50)
+              - column:
+                  name: position
+                  type: VARCHAR(50)
+
+  - changeSet:
+      id: 6
+      author: admin
+      changes:
+        - createTable:
+            tableName: lessons
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+              - column:
+                  name: subject
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: level
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 7
+      author: admin
+      changes:
+        - createTable:
+            tableName: mcq_quizzes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subject
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: level
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lesson_id
+                  type: BIGINT
+                  constraints:
+                    referencedTableName: lessons
+                    referencedColumnNames: id
+                    foreignKeyName: fk_mcq_quiz_lesson
+
+  - changeSet:
+      id: 8
+      author: admin
+      changes:
+        - createTable:
+            tableName: mcq_questions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: question_text
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quiz_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: mcq_quizzes
+                    referencedColumnNames: id
+                    foreignKeyName: fk_mcq_question_quiz
+              - column:
+                  name: correct_option_index
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 9
+      author: admin
+      changes:
+        - createTable:
+            tableName: mcq_options
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: option_text
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: question_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: mcq_questions
+                    referencedColumnNames: id
+                    foreignKeyName: fk_mcq_option_question
+
+  - changeSet:
+      id: 10
+      author: admin
+      changes:
+        - createTable:
+            tableName: past_exams
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subject
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: year
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: level
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_path
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 11
+      author: admin
+      changes:
+        - createTable:
+            tableName: progress
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: student_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: students
+                    referencedColumnNames: user_id
+                    foreignKeyName: fk_progress_student
+              - column:
+                  name: quiz_id
+                  type: BIGINT
+                  constraints:
+                    referencedTableName: mcq_quizzes
+                    referencedColumnNames: id
+                    foreignKeyName: fk_progress_quiz
+              - column:
+                  name: exam_id
+                  type: BIGINT
+                  constraints:
+                    referencedTableName: past_exams
+                    referencedColumnNames: id
+                    foreignKeyName: fk_progress_exam
+              - column:
+                  name: score
+                  type: INT
+              - column:
+                  name: total_questions
+                  type: INT
+              - column:
+                  name: completed_at
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 12
+      author: admin
+      changes:
+        - createTable:
+            tableName: study_sessions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: student_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: students
+                    referencedColumnNames: user_id
+                    foreignKeyName: fk_study_session_student
+              - column:
+                  name: lesson_id
+                  type: BIGINT
+                  constraints:
+                    referencedTableName: lessons
+                    referencedColumnNames: id
+                    foreignKeyName: fk_study_session_lesson
+              - column:
+                  name: start_time
+                  type: TIMESTAMP
+              - column:
+                  name: end_time
+                  type: TIMESTAMP
+              - column:
+                  name: notes
+                  type: TEXT
+
+  - changeSet:
+      id: 13
+      author: admin
+      changes:
+        - createTable:
+            tableName: flash_cards
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: front_content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: back_content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lesson_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: lessons
+                    referencedColumnNames: id
+                    foreignKeyName: fk_flash_card_lesson
+
+  - changeSet:
+      id: 14
+      author: admin
+      changes:
+        - createTable:
+            tableName: forum_topics
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: fk_forum_topic_author
+              - column:
+                  name: subject
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 15
+      author: admin
+      changes:
+        - createTable:
+            tableName: forum_posts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: fk_forum_post_author
+              - column:
+                  name: topic_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: forum_topics
+                    referencedColumnNames: id
+                    foreignKeyName: fk_forum_post_topic
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 16
+      author: admin
+      changes:
+        - createTable:
+            tableName: study_groups
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subject
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: level
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: admin_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: admins
+                    referencedColumnNames: user_id
+                    foreignKeyName: fk_study_group_admin
+
+  - changeSet:
+      id: 17
+      author: admin
+      changes:
+        - createTable:
+            tableName: group_members
+            columns:
+              - column:
+                  name: group_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: study_groups
+                    referencedColumnNames: id
+                    foreignKeyName: fk_group_member_group
+              - column:
+                  name: student_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: students
+                    referencedColumnNames: user_id
+                    foreignKeyName: fk_group_member_student
+            constraints:
+              primaryKey:
+                columnNames: group_id, student_id
+
+  - changeSet:
+      id: 18
+      author: admin
+      changes:
+        - createTable:
+            tableName: notifications
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    foreignKeyName: fk_notification_user
+              - column:
+                  name: message
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: read
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 19
+      author: admin
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_STUDENT
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_ADMIN
