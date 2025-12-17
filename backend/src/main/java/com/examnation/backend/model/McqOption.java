@@ -2,6 +2,7 @@ package com.examnation.backend.model;
 
 import lombok.Data;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "mcq_options")
@@ -16,5 +17,6 @@ public class McqOption {
 
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonBackReference
     private McqQuestion question;
 }
