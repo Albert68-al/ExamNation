@@ -20,11 +20,22 @@ class AuthRepository {
     return null;
   }
 
-  Future<String?> signup(String name, String email, String password) async {
-    final resp = await _api.post(
-      '/auth/register/student',
-      data: {'name': name, 'email': email, 'password': password},
-    );
+  Future<String?> signup(
+    String name,
+    String email,
+    String password, {
+    String? school,
+    String? level,
+    String? birthDate, // ISO yyyy-MM-dd
+    String? city,
+  }) async {
+    final payload = {'name': name, 'email': email, 'password': password};
+    if (school != null) payload['school'] = school;
+    if (level != null) payload['level'] = level;
+    if (birthDate != null) payload['birthDate'] = birthDate;
+    if (city != null) payload['city'] = city;
+
+    final resp = await _api.post('/auth/register/student', data: payload);
     if (resp.statusCode == 200 || resp.statusCode == 201) {
       final data = resp.data;
       final token = data['token'] ?? data['accessToken'] ?? data['jwt'];

@@ -37,8 +37,24 @@ class AuthCubit extends Cubit<AuthState> {
     return false;
   }
 
-  Future<bool> signup(String name, String email, String password) async {
-    final token = await _repo.signup(name, email, password);
+  Future<bool> signup(
+    String name,
+    String email,
+    String password, {
+    String? school,
+    String? level,
+    String? birthDate,
+    String? city,
+  }) async {
+    final token = await _repo.signup(
+      name,
+      email,
+      password,
+      school: school,
+      level: level,
+      birthDate: birthDate,
+      city: city,
+    );
     if (token != null) {
       emit(AuthState(authenticated: true, token: token));
       return true;
