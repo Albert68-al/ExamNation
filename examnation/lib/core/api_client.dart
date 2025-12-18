@@ -8,6 +8,12 @@ typedef UnauthorizedCallback = FutureOr<void> Function();
 
 class ApiClient {
   ApiClient._internal() {
+    // Debug: print configured API base URL at startup to help diagnose connection issues
+    // This will appear in the Flutter run logs.
+    try {
+      // ignore: avoid_print
+      print('ApiClient: configured baseUrl = $apiBaseUrl');
+    } catch (_) {}
     _dio = Dio(BaseOptions(baseUrl: apiBaseUrl))
       ..interceptors.add(
         InterceptorsWrapper(
